@@ -16,33 +16,32 @@
 var getElementsByClassName = function (className) {
 
   console.log('**** Let\'s START:', className);
-	var obj = window.document.body;   						// this is a node and an object
-	//var value = null;
+	var obj = window.document.body;   						// this is an element, a node, and an object
 	var result = [];
 
 	var lookForClass = new RegExp("\\b" + className + "\\b");
 
   var getClassName = function(obj) {
-  	console.log('CHECK', obj.classList, 'and obj is:', obj);
+  	//console.log('CHECK', obj.classList, 'and obj is:', obj);
 
   	if (lookForClass.test(obj.classList)) {
   		console.log("Found it :", obj.classList);  
   		result.push(obj);  
   	}
   	
-		var children = obj.childNodes;				// returns collection of node-objects 
+		var children = obj.childNodes;				// returns collection of node-objects, NOT an array 
 		//console.log('child', obj.childNodes, 'children array?', Array.isArray(children));
 
    	_.each(children, function(value, key) {
    		//console.log('value is', value);
       if (value.nodeType != 1) {				// if not an element node skip this iteration
-      	return;												// why illegal continue statement? continue or return?!?
+      	return;												  // why illegal continue statement? continue or return?!?
       }
-      console.log('Recurse!! value', value);
+      //console.log('Recurse!! value', value);
       getClassName(value);
     }); 
  	
- 	//return true;  		// is this necessary?
+ 	return true;  											// is this necessary?
   };
   
  	getClassName(obj); 
