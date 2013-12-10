@@ -10,44 +10,60 @@
 // Loop thru document object recursively to find all instances of className
 // document object contains strings and objects
 // CANNOT do a straight recursion loop into object, this results in stack overflow
-// hasOwnProperty
+
+
 
 var getElementsByClassName = function (className) {
 
   console.log('**** Let\'s START:', className);
-	var obj = window.document;   						// this is a node and an object
-	var value = null;
+	var obj = window.document.body;   						// this is a node and an object
+	//var value = null;
 	var result = [];
 
 	var lookForClass = new RegExp("\\b" + className + "\\b");
-	console.log("lookForClass", lookForClass);
-
-	var elementList = document.getElementsByTagName('html');
 
   var getClassName = function(obj) {
-  	console.log('CHECK', obj.className, 'and obj is:', obj);
+  	console.log('CHECK', obj.classList, 'and obj is:', obj);
 
-  	if (lookForClass.test(obj.className)) {
-  		console.log("Found it :", obj.className);  
+  	if (lookForClass.test(obj.classList)) {
+  		console.log("Found it :", obj.classList);  
   		result.push(obj);  
   	}
+  	
+		var children = obj.childNodes;				// returns collection of node-objects 
+		//console.log('child', obj.childNodes, 'children array?', Array.isArray(children));
 
-   	_.each(obj, function(value, key) {
-      if (value.nodeType != 1 || value == null) {				// if not an element node skip this iteration
-      	return 'hi';												// why illegal continue statement?
+   	_.each(children, function(value, key) {
+   		//console.log('value is', value);
+      if (value.nodeType != 1) {				// if not an element node skip this iteration
+      	return;												// why illegal continue statement? continue or return?!?
       }
       console.log('Recurse!! value', value);
       getClassName(value);
     }); 
  	
+ 	//return true;  		// is this necessary?
   };
   
- 	getClassName(elementList); 
-
+ 	getClassName(obj); 
 
 	console.log('EXPECTED', window.document.getElementsByClassName('targetClassName') );
 	console.log('result: ', result);		// Why isn't this displayed in console?
-	//return getClassName(obj);  
+ 
 	return result;
+};
+
+
+/*
+// Using walk the DOM approach.
+var getElementsByClassName = function (className) {
 
 };
+*/
+
+
+
+
+
+
+
