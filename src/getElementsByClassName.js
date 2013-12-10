@@ -15,7 +15,7 @@
 
 var getElementsByClassName = function (className) {
 
-  console.log('**** Let\'s START:', className);
+  //console.log('**** Let\'s START:', className);
 	var obj = window.document.body;   						// this is an element, a node, and an object
 	var result = [];
 
@@ -25,29 +25,29 @@ var getElementsByClassName = function (className) {
   	//console.log('CHECK', obj.classList, 'and obj is:', obj);
 
   	if (lookForClass.test(obj.classList)) {
-  		console.log("Found it :", obj.classList);  
+  		//console.log("Found it :", obj.classList);  
   		result.push(obj);  
   	}
   	
-		var children = obj.childNodes;				// returns collection of node-objects, NOT an array 
+		var children = obj.childNodes;					// returns collection of node-objects, NOT an array 
 		//console.log('child', obj.childNodes, 'children array?', Array.isArray(children));
 
    	_.each(children, function(value, key) {
    		//console.log('value is', value);
-      if (value.nodeType != 1) {				// if not an element node skip this iteration
-      	return;												  // why illegal continue statement? continue or return?!?
+      if (value.nodeType != 1) {					// if not an element node skip this iteration
+      	return;														// why illegal continue statement? continue or return?!?
       }
       //console.log('Recurse!! value', value);
       getClassName(value);
     }); 
  	
- 	return true;  											// is this necessary?
+ 	//return true;  												// is this necessary?
   };
   
  	getClassName(obj); 
 
-	console.log('EXPECTED', window.document.getElementsByClassName('targetClassName') );
-	console.log('result: ', result);		// Why isn't this displayed in console?
+	//console.log('EXPECTED', window.document.getElementsByClassName('targetClassName') );
+	//console.log('result: ', result);		// Why isn't this displayed in console?
  
 	return result;
 };
