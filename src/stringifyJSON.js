@@ -20,6 +20,7 @@ var stringifyJSON = function (obj) {
 				strObj = "";
 			_.each(obj, function(value, key) {
 				//console.log('key',key, 'value', value);
+				// Function, RegExp, and Error objects and undefined value cannot be serialized
 				valid = (typeof(value) === 'function' || value === void 0) ? false : true;
 				//console.log('valid',valid);
 				if (!valid) {
