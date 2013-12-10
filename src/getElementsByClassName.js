@@ -13,34 +13,35 @@
 // hasOwnProperty
 
 var getElementsByClassName = function (className) {
+
   console.log('**** Let\'s START:', className);
-	//  console.log(typeof(document));
-	var obj = window.document;   // this is both a node and an object
+	var obj = window.document;   						// this is a node and an object
 	var value = null;
 	var result = [];
 
-	var className = new RegExp("//b" + className + "\\b");
-
+	var lookForClass = new RegExp("\\b" + className + "\\b");
+	console.log("lookForClass", lookForClass);
 
   var getClassName = function(obj) {
-  	console.log('CHECK', obj.className);
+  	console.log('CHECK', obj.className, 'and obj is:', obj);
 
-  	if (className.test(obj.className)) {
+  	if (lookForClass.test(obj.className)) {
   		console.log("Found it :", obj.className);  
   		result.push(obj.className);  
-  		console.log("this should never show")	;
   	}
-  	else {
-   	 	_.each(obj, function(value, key) {
-        if (typeof(value) === 'object' && value !== null) {
-          console.log('Recurse!! value', value);
-          getClassName(value);
-        }
-      }); 
-    }
+
+   	_.each(obj, function(value, key) {
+      if (value.nodeType != 1) {				// if not an element node skip this iteration
+      	return;
+      }
+      console.log('Recurse!! value', value);
+      getClassName(value);
+    }); 
+ 	
+ 		return true;
   };
   
-  var result = getClassName(obj);   // i think this immediately calls the function ???
+  var result = getClassName(obj); 
 
 	//console.log('EXPECTED', document.getElementsByClassName('targetClassName') );
 	//console.log('EXPECTED2', window.document.getElementsByClassName('targetClassName') );
