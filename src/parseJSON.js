@@ -4,7 +4,6 @@
 // but you're not, so you'll write it from scratch:
 // Use a recursive descent parser
 
-
 var parseJSON = function (json) {
 	console.log('*** START json is:', json);
 	var	text = json;
@@ -18,7 +17,6 @@ var parseJSON = function (json) {
 		console.log('at:',at, 'ch:', ch);
 	}
 
-
 	// Parse a number
 	number = function () {
 			console.log("in while, ch is:", ch);		
@@ -31,8 +29,6 @@ var parseJSON = function (json) {
 		}
 		return string;
 	};
-
-
 
 	return function () {
 		ch = text.charAt(0);
