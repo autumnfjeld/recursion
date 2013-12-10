@@ -22,30 +22,32 @@ var getElementsByClassName = function (className) {
 	var lookForClass = new RegExp("\\b" + className + "\\b");
 	console.log("lookForClass", lookForClass);
 
+	var elementList = document.getElementsByTagName('html');
+
   var getClassName = function(obj) {
   	console.log('CHECK', obj.className, 'and obj is:', obj);
 
   	if (lookForClass.test(obj.className)) {
   		console.log("Found it :", obj.className);  
-  		result.push(obj.className);  
+  		result.push(obj);  
   	}
 
    	_.each(obj, function(value, key) {
-      if (value.nodeType != 1) {				// if not an element node skip this iteration
-      	return;
+      if (value.nodeType != 1 || value == null) {				// if not an element node skip this iteration
+      	return 'hi';												// why illegal continue statement?
       }
       console.log('Recurse!! value', value);
       getClassName(value);
     }); 
  	
- 		return true;
   };
   
-  var result = getClassName(obj); 
+ 	getClassName(elementList); 
 
-	//console.log('EXPECTED', document.getElementsByClassName('targetClassName') );
-	//console.log('EXPECTED2', window.document.getElementsByClassName('targetClassName') );
-	console.log('result: ', result);
+
+	console.log('EXPECTED', window.document.getElementsByClassName('targetClassName') );
+	console.log('result: ', result);		// Why isn't this displayed in console?
 	//return getClassName(obj);  
 	return result;
+
 };
