@@ -19,11 +19,13 @@ var getElementsByClassName = function (className) {
 	var value = null;
 	var result = [];
 
+	var className = new RegExp("//b" + className + "\\b");
+
 
   var getClassName = function(obj) {
   	console.log('CHECK', obj.className);
 
-  	if (obj.className === className) {
+  	if (className.test(obj.className)) {
   		console.log("Found it :", obj.className);  
   		result.push(obj.className);  
   		console.log("this should never show")	;
