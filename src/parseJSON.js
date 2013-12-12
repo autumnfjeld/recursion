@@ -11,19 +11,32 @@ var parseJSON = function (json) {
 	var at;							// index of current character
 	var ch;							// current character
 
+
+	var error = function (m) {
+		throw {
+			name: 		'SyntaxError',
+			message: 	m,
+			at: 	  	at,
+			text:   	text 
+		};
+	};
+
 	// Move to next character
-	next = function () {
+	// If c is passed check that it's not same as current character
+	var next = function (c) {
+		if (c && c !== ch) {
+			console.log("Expected '" + c + "' instead of '" + ch + "'");
+		}
 		at++
 		ch = text.charAt(at);
 		console.log("IN next. ch:", ch, 'at', at, 'text', text);
 		return ch;
-	}
+	};
 
 	// Handle white space
 	var white = function () {
 
-	} 
-
+	}; 
 
 	// Parse a number
 	var number = function () {
@@ -31,7 +44,7 @@ var parseJSON = function (json) {
 		var number;
 		var string = '';
 
-		while (ch >= '0' && ch <= '9') {
+		while (ch >= '0' && ch <= '9' || ch === '.' || ch === '-') {
 			string += ch;
 			next();
 		}
@@ -61,7 +74,7 @@ var parseJSON = function (json) {
 
 	// Parse special words
 	var specialWords = function () {
-		console.log("IN specialWords. ch is", ch, 'test', ch < 'z');
+		console.log("IN specialWords. ch is", ch, 'test', ch < 'z', ch > 'A');
 		var string = '';
 
 		while ( ch >= 'A' && ch <= 'z') {
@@ -74,21 +87,46 @@ var parseJSON = function (json) {
 			return false;
 		if (string === 'true')
 			return true;
-		return string;
-
+		error('Unexpected "' + ch + '"');
 	};
+
+	var array = function () {
+		console.log("IN array, ch is:", ch)
+		var pArray = [];
+		if (ch == '[') {
+			next();
+
+			while (ch) {
+				if (ch == ']') {
+					next(']');				// must move forward 
+					return pArray;
+				}
+				console.log('in while loop, pArray', pArray);
+				pArray.push(value()); 
+				if (ch == ']') {
+					return pArray
+				}
+				next(',');	
+			}
+		}
+
+		return pArray;
+	}; 
 
 	var value = function () {
 		console.log('IN value. ch:', ch);
 		switch (ch) {
 			case '[':
 				return array();
+			case '{':
+				return "Not done yet";
 			case '"':
 				return string();
+			case '-':
+				return number();
 			default: 
 				return ch >= '0' && ch <= '9' ? number() : specialWords();
 		}
-
 	};
 
 	var result = function () {  
