@@ -5,9 +5,8 @@
 // Use a recursive descent parser
 
 var parseJSON = function (json) {
-
+	//why are null, true, false read as string?
 	console.log('%c*** START json is:', 'background-color:yellow;', json, 'typeof is', typeof json);
-	
 	var	text;
 	var at;							// index of current character
 	var ch;							// current character
@@ -19,6 +18,11 @@ var parseJSON = function (json) {
 		console.log("IN next. ch:", ch, 'at', at, 'text', text);
 		return ch;
 	}
+
+	// Handle white space
+	var white = function () {
+
+	} 
 
 
 	// Parse a number
@@ -39,29 +43,50 @@ var parseJSON = function (json) {
 
 	// Parse a string (does not account for escaped characters)
 	var string = function () {
+		//string will always be enclosed with ""
 		console.log("IN string. ch is", ch, 'test', ch < 'z');
+		var string = '';
+
+		if (ch == '"') {
+			next();
+		}
+		while ( ch != '"') {
+		//while ( ch >= 'A' && ch <= 'z') {
+			console.log('in stringfunc while loop. ch is:', ch);
+			string += ch;
+			next();
+		}
+		return string;
+	};
+
+	// Parse special words
+	var specialWords = function () {
+		console.log("IN specialWords. ch is", ch, 'test', ch < 'z');
 		var string = '';
 
 		while ( ch >= 'A' && ch <= 'z') {
 			string += ch;
 			next();
 		}
-
+		if (string === 'null')
+			return null;
+		if (string === 'false')
+			return false;
+		if (string === 'true')
+			return true;
 		return string;
-	};
-
-	// Parse special words
-	var specialWords = function () {
 
 	};
 
 	var value = function () {
 		console.log('IN value. ch:', ch);
 		switch (ch) {
-			case null:
-				return 'HI';
+			case '[':
+				return array();
+			case '"':
+				return string();
 			default: 
-				return ch >= '0' && ch <= '9' ? number() : string();
+				return ch >= '0' && ch <= '9' ? number() : specialWords();
 		}
 
 	};
@@ -69,20 +94,18 @@ var parseJSON = function (json) {
 	var result = function () {  
 		// Initialize stuff here
 		text = json;
+		console.log('typeof text',typeof text);
 		at = 0;
 		ch = text[0];
 		//console.log("here");
 		var parsed = value();
 		console.log('%cJSON.parse is: ', 'background-color: pink;', JSON.parse(json), typeof JSON.parse(json));
 		console.log('%cmy parse is:', 'background-color: pink;', parsed, ' and typeof', typeof parsed);
-
 		return parsed;
 	};
 
 	//return 'autumn';
+	//console.log('RESULT', result());
 	return result();  //why is the return value of parsed not returned for parseJSON ?
-	
-
-
 
 };
