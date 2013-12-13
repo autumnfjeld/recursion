@@ -6,12 +6,12 @@
 
 var parseJSON = function (json) {
 	//why are null, true, false read as string?
-	console.log('%c*** START json is:', 'background-color:yellow;', json, 'typeof is', typeof json);
+	//console.log('%c*** START json is:', 'background-color:yellow;', json, 'typeof is', typeof json);
 	var	text;
 	var at;							// index of current character
 	var ch;							// current character
 
-
+	// Set up error handling
 	var error = function (m) {
 		throw {
 			name: 		'SyntaxError',
@@ -21,26 +21,25 @@ var parseJSON = function (json) {
 		};
 	};
 
-	// Move to next character
-	// If c is passed check that it's not same as current character
+	// If c is passed check that it is equal to ch as expected
 	var next = function (c) {
 		if (c && c !== ch) {
-			console.log("Expected '" + c + "' instead of '" + ch + "'");
+			error("Expected '" + c + "' instead of '" + ch + "'");
 		}
 		at++
 		ch = text.charAt(at);
-		console.log("IN next. ch:", ch, 'at', at, 'text', text);
+		//console.log("IN next. ch:", ch, 'at', at, 'text', text);
 		return ch;
 	};
 
-	// Handle white space
+	// Handle white space (to do)
 	var white = function () {
 
 	}; 
 
 	// Parse a number
 	var number = function () {
-		console.log("IN number. ch is", ch );
+		//console.log("IN number. ch is", ch );
 		var number;
 		var string = '';
 
@@ -49,32 +48,31 @@ var parseJSON = function (json) {
 			next();
 		}
 
-		number = +string;  			// why not just return string? and what is + here?
-		console.log("is this a number", typeof number);
+		number = +string;								// + turns string into number type  			
 		return number;
 	};
 
 	// Parse a string (does not account for escaped characters)
 	var string = function () {
-		//string will always be enclosed with ""
-		console.log("IN string. ch is", ch, 'test', ch < 'z');
+		//string will always be enclosed with "", use this as marker
+		//console.log("IN string. ch is", ch, 'test', ch < 'z');
 		var string = '';
 
 		if (ch == '"') {
 			next();
 		}
 		while ( ch != '"') {
-		//while ( ch >= 'A' && ch <= 'z') {
-			console.log('in stringfunc while loop. ch is:', ch);
 			string += ch;
 			next();
 		}
+		next('"');  						// move to end of string 
+		
 		return string;
 	};
 
 	// Parse special words
 	var specialWords = function () {
-		console.log("IN specialWords. ch is", ch, 'test', ch < 'z', ch > 'A');
+		//console.log("IN specialWords. ch is", ch, 'test', ch < 'z', ch > 'A');
 		var string = '';
 
 		while ( ch >= 'A' && ch <= 'z') {
@@ -91,19 +89,19 @@ var parseJSON = function (json) {
 	};
 
 	var array = function () {
-		console.log("IN array, ch is:", ch)
+		//console.log("IN array, ch is:", ch)
 		var pArray = [];
 		if (ch == '[') {
 			next('[');
 
-			while (ch) {					// don't think this tests anything, just keeps the loop going
+			while (ch) {				
 				if (ch == ']') {
-					next(']');				// must move forward 
+					next(']');				
 					return pArray;
 				}
-				console.log('in while loop, pArray', pArray);
 				pArray.push(value()); 
 				if (ch == ']') {
+					next(']');
 					return pArray
 				}
 				next(',');	
@@ -114,27 +112,40 @@ var parseJSON = function (json) {
 	}; 
 
 	var object = function (){
-		console.log("In object function");
+		//console.log("In object function");
 		var obj = {};
+		var key = '', val = '';
 
 		if (ch == '{') {
 			next('{');
-			return obj;
 		}
 
 		while (ch) {
-			if (ch == '{') {
-				next('{')
+			if (ch == '}') {
+				next('}')
+				return obj;
 			}
+			while (ch != ':') {
+				key = value();
+			}
+			next(':');
+
+			val = value();
+			obj[key] = val;
+			if (ch == '}') {
+				next('}');
+				return obj;				
+			}
+			
 			next(',');
 		}
 		
 		return obj;	
 	};
 
-
+	// Main 'switchboard' to route item to be parsed
 	var value = function () {
-		console.log('IN value. ch:', ch);
+		//console.log('IN value. ch:', ch);
 		switch (ch) {
 			case '[':
 				return array();
@@ -149,21 +160,17 @@ var parseJSON = function (json) {
 		}
 	};
 
+	// Start the process, initialize stuff here
 	var result = function () {  
-		// Initialize stuff here
 		text = json;
-		console.log('typeof text',typeof text);
 		at = 0;
 		ch = text[0];
 		//console.log("here");
 		var parsed = value();
-		console.log('%cJSON.parse is: ', 'background-color: pink;', JSON.parse(json), typeof JSON.parse(json));
-		console.log('%cmy parse is:', 'background-color: pink;', parsed, ' and typeof', typeof parsed);
+		//console.log('%cJSON.parse is: ', 'background-color: pink;', JSON.parse(json), typeof JSON.parse(json));
+		//console.log('%cmy parse is:', 'background-color: pink;', parsed, ' and typeof', typeof parsed);
 		return parsed;
 	};
 
-	//return 'autumn';
-	//console.log('RESULT', result());
-	return result();  //why is the return value of parsed not returned for parseJSON ?
-
+	return result(); 
 };
