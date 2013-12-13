@@ -4,8 +4,7 @@
 // but you don't so you're going to have to write it from scratch:
 var stringifyJSON = function (obj) {
 	args = Array.prototype.slice.call(arguments);
-	//var len = obj.len || 0;
-	//console.log('len', len);
+	//console.log('args', args);
 	var valid = null;
 	var strObj = null;
 
