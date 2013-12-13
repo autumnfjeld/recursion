@@ -5,17 +5,22 @@ describe("parseJSON", function(){
     validObjects.forEach(function(obj){
       var result = parseJSON(JSON.stringify(obj));
       var equality = _.isEqual(result, obj); // why can't we use `===` here?
+      //console.log('SPEC obj', obj, 'typeof', typeof obj, ' | SPEC result: ', result, ' | AND equality', equality);
       expect(equality).toBeTruthy();
     });
-
-    // if you really want to stress test your code, try this...
-    // extraCreditStrings.forEach(function(string){
-    //   var expected = JSON.parse(string);
-    //   var result = parseJSON(string);
-    //   var equality = _.isEqual(result, expected);
-    //   expect(equality).toBeTruthy();
-    // });
   });
+
+     //if you really want to stress test your code, try this...
+  /*
+  it("should, for extra stress tests, match the result of calling JSON.parse", function(){
+     extraCreditStrings.forEach(function(string){
+       var expected = JSON.parse(string);
+       var result = parseJSON(string);
+       var equality = _.isEqual(result, expected);
+       expect(equality).toBeTruthy();
+     });
+  }); 
+*/
 
   it("should error out sometimes", function(){
     invalidStrings.forEach(function(test){
@@ -24,6 +29,6 @@ describe("parseJSON", function(){
         parseJSON(test);
       }).toThrow();
     });
-  });
+  }); 
 
 });
