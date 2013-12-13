@@ -94,9 +94,9 @@ var parseJSON = function (json) {
 		console.log("IN array, ch is:", ch)
 		var pArray = [];
 		if (ch == '[') {
-			next();
+			next('[');
 
-			while (ch) {
+			while (ch) {					// don't think this tests anything, just keeps the loop going
 				if (ch == ']') {
 					next(']');				// must move forward 
 					return pArray;
@@ -113,13 +113,33 @@ var parseJSON = function (json) {
 		return pArray;
 	}; 
 
+	var object = function (){
+		console.log("In object function");
+		var obj = {};
+
+		if (ch == '{') {
+			next('{');
+			return obj;
+		}
+
+		while (ch) {
+			if (ch == '{') {
+				next('{')
+			}
+			next(',');
+		}
+		
+		return obj;	
+	};
+
+
 	var value = function () {
 		console.log('IN value. ch:', ch);
 		switch (ch) {
 			case '[':
 				return array();
 			case '{':
-				return "Not done yet";
+				return object();
 			case '"':
 				return string();
 			case '-':
